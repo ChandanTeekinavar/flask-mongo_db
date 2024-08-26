@@ -1,0 +1,9 @@
+use admin
+
+db.createUser({
+  user: "flaskuser",
+  pwd: "flaskpassword",
+  roles: ["readWrite", "dbOwner"]
+})
+
+db.createCollection("flask_db")

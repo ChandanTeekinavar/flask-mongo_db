@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  serviceName: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:latest
+        resources:
+          requests:
+            cpu: 200m
+            memory: 250Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+        # env:
+        # - name: MONGO_INITDB_ROOT_USERNAME
+        #   value: flaskuser
+        # - name: MONGO_INITDB_ROOT_PASSWORD
+        #   value: flaskpassword
+        # - name: MONGO_INITDB_DATABASE
+        #   value: flask_db
+        # - name: MONGO_AUTH_ENABLED
+        #   value: "true"
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongodb-persistent-storage
+          mountPath: /data/db
+      # initContainers:
+      # - name: init-mongodb
+      #   image: mongo:latest
+      #   command: ["mongo", "init-mongodb.mango"]
+      #   volumeMounts:
+      #   - name: mongodb-data
+      #     mountPath: /data/db
+      # initContainers:
+      # - name: init-mongodb
+      #   image: mongo:latest
+      #   command: ["bash", "-c"]
+      #   args:
+      #     - "mongo < init-mongodb.mango"
+      #   volumeMounts:
+      #     - name: mongodb-data
+      #       mountPath: /data/db    
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-persistent-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 1Gi

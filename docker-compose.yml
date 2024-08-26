@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    image: chandanteekinavar/flask:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGODB_URI=mongodb://flaskuser:flaskpassword@mongodb:27017/flask_db
+      # - MONGODB_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=flaskuser
+      - MONGO_INITDB_ROOT_PASSWORD=flaskpassword
+    volumes:
+      - mongodb-data:/data/db
+      - ./mongodb-init.mongo:/docker-entrypoint-initdb.d/mongodb-init.mongo:ro
+
+volumes:
+  mongodb-data:

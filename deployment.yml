@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+  namespace: flask
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: chandanteekinavar/flask:1.0
+        env:
+        - name: MONGODB_URI
+          value: mongodb://mongodb.flask.svc.cluster.local:27017/ 
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: 200m
+            memory: 250Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
