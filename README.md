@@ -79,7 +79,9 @@ To make a POST request:
      **curl -X POST -H "Content-Type: application/json" -d '{"sampleKey":"sampleValue"}' http://localhost:5000/data**
 
   ** For Windows:
+
      **Invoke-WebRequest -Method POST -Uri http://localhost:5000/data -ContentType "application/json" -Body '{"sampleKey":"sampleValue"}'**
+
 
 Then, you can access the /data endpoint.
 
