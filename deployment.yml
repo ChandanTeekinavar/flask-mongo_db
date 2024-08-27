@@ -15,10 +15,30 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: chandanteekinavar/flask:1.0
+        image: chandanteekinavar/flask:3.2
         env:
-        - name: MONGODB_URI
-          value: mongodb://mongodb.flask.svc.cluster.local:27017/ 
+        - name: MONGO_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              key: username
+              name: env-config
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: mongodb-secret
+        - name: MONGO_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: db-host
+              name: env-config
+        - name: MONGO_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: db-port
+              name: env-config
+        # - name: MONGODB_URI
+        #   value: mongodb://mongodb.flask.svc.cluster.local:27017/ 
         ports:
         - containerPort: 5000
         resources:

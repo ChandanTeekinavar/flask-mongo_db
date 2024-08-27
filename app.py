@@ -1,25 +1,31 @@
-from flask import Flask, request, jsonify # Import necessary modules from Flask
-from pymongo import MongoClient # Import MongoClient to interact with MongoDB
-from datetime import datetime # Import datetime to get the current time
-import os # Import os to access environment variables
+from flask import Flask, request, jsonify  # Import necessary modules from Flask
+from pymongo import MongoClient  # Import MongoClient to interact with MongoDB
+from datetime import datetime  # Import datetime to get the current time
+import os  # Import os to access environment variables
 
- # Initialize the Flask application
-app = Flask(__name__) 
+# Initialize the Flask application
+app = Flask(__name__)
 
- # Set up the MongoDB client
- # The MongoDB URI is fetched from the environment variable 'MONGODB_URI'
- # If not found, it defaults to 'mongodb://localhost:27017/'
-client = MongoClient(os.environ.get("MONGODB_URI", "mongodb://localhost:27017/"))
-# client = MongoClient("mongodb://flaskuser:flaskpassword@mongodb:27017/flask_db")
-# client = MongoClient(os.environ.get("MONGODB_URI"))
+# Fetch MongoDB connection details from environment variables
+mongo_user = os.environ.get("MONGO_USERNAME", "flask_user")
+mongo_password = os.environ.get("MONGO_PASSWORD", "password")
+mongo_host = os.environ.get("MONGO_HOST", "mongodb")
+mongo_port = os.environ.get("MONGO_PORT", "27017")
+mongo_dbname = os.environ.get("MONGO_INITDB_DATABASE", "flask_db")
 
- # Connect to the database named 'flask_db'
-db = client.flask_db
+# Construct the MongoDB URI with authentication details
+mongo_uri = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/{mongo_dbname}"
 
- # Connect to the collection named 'data' within the 'flask_db' database
+# Set up the MongoDB client with the constructed URI
+client = MongoClient(mongo_uri)
+
+# Connect to the database named 'flask_db'
+db = client[mongo_dbname]
+
+# Connect to the collection named 'data' within the 'flask_db' database
 collection = db.data
 
- # Define the route for the root URL
+# Define the route for the root URL
 @app.route('/')
 def index():
     # Return a welcome message with the current time
@@ -42,7 +48,7 @@ def data():
         data = list(collection.find({}, {"_id": 0}))
         # Return the data as a JSON response with status code 200 (OK)
         return jsonify(data), 200
-    
+
 # Run the Flask application
 # The application will listen on all available IP addresses (0.0.0.0) and port 5000
 if __name__ == '__main__':

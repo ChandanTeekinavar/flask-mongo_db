@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-config
+  namespace: flask
+data:
+  database: flask_db
+  db-host: mongodb
+  db-port: "27017"
+  username: flask_user
