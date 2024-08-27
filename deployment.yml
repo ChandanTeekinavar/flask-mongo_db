@@ -32,6 +32,11 @@ spec:
             configMapKeyRef:
               key: db-host
               name: env-config
+        - name: MONGO_DBNAME
+          valueFrom:
+            configMapKeyRef:
+              key: database
+              name: env-config
         - name: MONGO_PORT
           valueFrom:
             configMapKeyRef:
